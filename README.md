@@ -1,10 +1,10 @@
-**# devops-k8s-pythonapp-s3-helm**
+# devops-k8s-pythonapp-s3-helm
 Creating Python flask app with S3 upload option and deploying it to Kubernetes
 
 This is for creating the python application which sends files to multiple S3 buckets(i.e different environments like dev,qa,staging,prod..) and Also Option to Upload files to s3 by giving the filepath.The app pod restarts every 5minutes by using liveness(you can change/remove this to your needs)
 
 
-#Requirements:
+**#Requirements:**
 We need to have:
 
 kubenertes
@@ -20,7 +20,7 @@ python >= 3.x (if you want check app in your local)
 git(to clone this repository :p )
 
 
-#Description of the deployment:
+**#Description of the deployment:**
 
 Once you have installed all the required tools mentioned in requirements. You can clone this repository by using below command:
 git clone -b main https://github.com/gopibhaskar/devops-k8s-pythonapp-s3-helm.git
@@ -93,7 +93,7 @@ spec:
           path: app.py
 
 
-#Deployment Steps:
+**#Deployment Steps:**
 
 git clone -b main https://github.com/gopibhaskar/devops-k8s-pythonapp-s3-helm.git
 
