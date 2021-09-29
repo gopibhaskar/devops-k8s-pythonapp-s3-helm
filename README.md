@@ -8,13 +8,20 @@ Requirements:
 We need to have:
 
 kubenertes
+
 minikube(if you want to deploy it in localmachine)
+
 helm
+
 terraform >= 0.15.0(I tested with both 0.15.0 and latest(1.0.7)
+
 python >= 3.x (if you want check app in your local)
+
 git(to clone this repository :p )
 
+
 Description of the deployment:
+
 Once you have installed all the required tools mentioned in requirements. You can clone this repository by using below command:
 git clone -b main https://github.com/gopibhaskar/devops-k8s-pythonapp-s3-helm.git
 Once the repository is cloned, it will create devops-k8s-pythonapp-s3-helm directory. Change directory to that.
@@ -26,6 +33,7 @@ For the values, I have differentiated with environments by creating environment 
 qa/values.yaml , staging/values.yaml
 If you want to change values for environment specific you can simply modify or to add new environment, you can add folder under root directory and add entries in main.tf (main directory).
 I have used livenessprobe to restart my pod automatically. But we can also use CronJob like below:
+
 apiVersion: batch/v1
 kind: CronJob
 metadata:
