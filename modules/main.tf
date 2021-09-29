@@ -68,3 +68,7 @@ variable namespace_name{
 variable environment{
    default = "qa"
 }
+
+variable clusterid{
+   default = "minikube"
+}
