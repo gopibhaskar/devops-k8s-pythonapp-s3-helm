@@ -92,6 +92,7 @@ spec:
         - key: app.py
           path: app.py
 
+
 Deployment Steps:
 
 git clone -b main https://github.com/gopibhaskar/devops-k8s-pythonapp-s3-helm.git
@@ -103,6 +104,7 @@ terraform init
 terraform plan
 
 terraform apply --auto-approve
+
 
 
 Validation Steps:
