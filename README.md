@@ -3,8 +3,10 @@ Creating Python flask app with S3 upload option and deploying it to Kubernetes
 
 This is for creating the python application which sends files to multiple S3 buckets(i.e different environments like dev,qa,staging,prod..) and Also Option to Upload files to s3 by giving the filepath.The app pod restarts every 5minutes by using liveness(you can change/remove this to your needs)
 
+
 Requirements:
 We need to have:
+
 kubenertes
 minikube(if you want to deploy it in localmachine)
 helm
