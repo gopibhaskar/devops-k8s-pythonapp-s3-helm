@@ -16,7 +16,7 @@ resource "aws_s3_bucket" "bucket" {
 resource "null_resource" "kube_config"{
 
   provisioner "local-exec" {
-    command = "kubectl config use-context minikube"
+    command = "kubectl config use-context ${var.clusterid}"
   }   
 }
 
