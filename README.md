@@ -85,13 +85,22 @@ spec:
 Deployment Steps:
 
 git clone -b main https://github.com/gopibhaskar/devops-k8s-pythonapp-s3-helm.git
+
 cd devops-k8s-pythonapp-s3-helm
+
 terraform init
+
 terraform plan
+
 terraform apply --auto-approve
 
+
 Validation Steps:
+
 kubectl get all -n <namespace_name>
+
 helm list
+
 kubectl get svc -n <namespace_name>
+
 Open the url in browser to check if the app is working fine or not. 
