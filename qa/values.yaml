@@ -1,0 +1,3 @@
+environment: "qa"
+bucket_name: "qa-gopibhaskar-papanaboina-platform-challenge"
+namespace: "qa-ns"

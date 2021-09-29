@@ -1,0 +1,135 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+  namespace: {{ .Values.namespace }}
+data:
+  run-script.sh: |-
+    #!/bin/bash
+    pip install boto3
+    pip install flask
+    ls -lrt /opt
+    python /opt/app.py
+    echo "Script completed"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: python-app
+  namespace: {{ .Values.namespace }}
+data:
+  app.py: |-
+    from flask import Flask, request
+    import boto3
+    import os
+    import sys
+    from datetime import datetime
+    
+    app = Flask(__name__)
+    currenttime= datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
+    currentfile= currenttime + '-file'
+    
+    @app.route('/')
+    def index():
+        with open(currentfile, 'w') as f:
+            f.write('File created on' + currenttime)
+        s3 = boto3.resource('s3')
+        s3.meta.client.upload_file(currentfile, os.environ.get('S3Bucket'), currentfile)
+    
+        return '''<h1>File saved to S3</h1>
+    	<h1>Do you need to upload any other file</h1>
+    	<form method=POST enctype=multipart/form-data action="upload">
+        <input type="text" name="myfile">
+        <input type="submit">
+        </form>'''
+    
+    @app.route('/upload', methods=['POST'])
+    def upload():
+        filepath = request.form['filepath']
+        s3 = boto3.resource('s3')
+        s3.meta.client.upload_file(filepath, os.environ.get('S3Bucket'), currentfile)
+        return '<h1>File saved to S3</h1>'
+    
+    if __name__ == '__main__':
+        app.run(host='127.0.0.0',port=5000,debug=True)  
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: python-s3push
+  namespace: {{ .Values.namespace }}
+spec:
+  containers:
+  - name: python-s3
+    image: python:latest
+    ports:
+    - containerPort: 5000
+    env:
+    - name: S3Bucket
+      value: {{ .Values.bucket_name }}
+    - name: Environment
+      value: {{ .Values.environment }}
+    - name: NAME
+      value: "Kubernetes"
+    command:
+      - sh
+      - "-c"
+      - |
+        /bin/bash <<'EOF'
+        pip install boto3
+        pip install flask
+        cat /opt/app.py
+        python /opt/app.py
+        echo "Script completed"
+        EOF
+    livenessProbe:
+      tcpSocket:
+        port: 5000
+      initialDelaySeconds: 30
+      periodSeconds: 300
+    livenessProbe:
+      exec:
+        command:
+        - exit $(sleep 360;echo 1)
+      failureThreshold: 1
+      initialDelaySeconds: 60
+      periodSeconds: 60
+    volumeMounts:
+    - name: python-app
+      mountPath: /opt/app.py
+      subPath: app.py
+  volumes:
+  - name: python-app
+    configMap:
+      name: python-app
+      items:
+        - key: app.py
+          path: app.py
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: {{ .Values.namespace }}
+spec:
+  type: NodePort
+  selector:
+    app: python-s3push
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-lb-service
+  namespace: {{ .Values.namespace }}
+spec:
+  type: LoadBalancer
+  selector:
+    app: python-s3push
+  ports:
+  - protocol: TCP
+    port: 60000
+    targetPort: 5000

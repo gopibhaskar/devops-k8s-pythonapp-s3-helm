@@ -1,0 +1,3 @@
+environment: "staging"
+bucket_name: "staging-gopibhaskar-papanaboina-platform-challenge"
+namespace: "staging-ns"
