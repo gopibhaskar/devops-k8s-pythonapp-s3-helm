@@ -107,7 +107,7 @@ terraform apply --auto-approve
 
 
 
-#Validation Steps:
+**#Validation Steps:**
 
 kubectl get all -n <namespace_name>
 
